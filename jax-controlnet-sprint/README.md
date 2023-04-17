@@ -28,6 +28,9 @@ Don't forget to fill out the [signup form]!
     - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
 - [Creating our Space](#creating-our-space)
     - [Writing our Application](#writing-our-application)
+- [FAQ](#faq)
+    - [How to Use VSCode with TPU VM?](#how-to-use-vscode-with-tpu-vm)
+    - [How to Test Your Code Locally?](#how-to-test-your-code-locally)
 
 ## Organization 
 
@@ -226,7 +229,7 @@ Google Cloud Platform. If it's not the case, please let us know in the Discord s
 
 In the following, we will describe how to do so using a standard console, but you should also be able to connect to the TPU VM via IDEs, like Visual Studio Code, etc.
 
-1. You need to install the [Google Cloud SDK](https://cloud.google.com/sdk). Please follow the instructions on https://cloud.google.com/sdk.
+1. You need to install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install). Please follow the instructions on https://cloud.google.com/sdk.
 
 2. Once you've installed the Google Cloud SDK, you should set your account by running the following command. Make sure that <your-email-address> corresponds to the gmail address you used to sign up for this event.
   
@@ -275,10 +278,18 @@ We can activate the environment by running:
 source ~/<your-venv-name>/bin/activate
 ```
 
-Now, we can install JAX `0.4.5`:
+Then install Diffusers and the library's training dependencies:
 
 ```bash
-pip install "jax[tpu]==0.4.5" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
+pip install git+https://github.com/huggingface/diffusers.git
+```
+
+Then clone this repository and install JAX, Flax and the other dependencies:
+
+```bash
+git clone https://github.com/huggingface/community-events
+cd community-events/jax-controlnet-sprint/training_scripts
+pip install -U -r requirements_flax.txt
 ```
 
 To verify that JAX was correctly installed, you can run the following command:
@@ -289,20 +300,6 @@ jax.device_count()
 ```
 
 This should display the number of TPU cores, which should be 4 on a TPUv4-8 VM. If Python is not able to detect the TPU device, please take a look at [this section](#troubleshoot-your-tpu-vm) for solutions.
-
-Then install Diffusers and the library's training dependencies:
-
-```bash
-pip install git+https://github.com/huggingface/diffusers.git
-```
-
-Then clone this repository and install the other dependencies:
-
-```bash
-git clone https://github.com/huggingface/community-events
-cd community-events/jax-controlnet-sprint/training_scripts
-pip install -U -r requirements_flax.txt
-```
 
 If you want to use Weights and Biases logging, you should also install `wandb` now:
 
@@ -457,7 +454,7 @@ kill -9 1378725
 You can also use the below command to find processes using each of the TPU chips (e.g. `/dev/accel0` is one of the TPU chips)
 
 ```
-use sudo lsof -w /dev/accel0
+sudo lsof -w /dev/accel0
 ```
 
 To kill all the processes using `/dev/accel0` 
@@ -654,5 +651,21 @@ tags:
 ---
 ```
 
+## FAQ 
 
+In this section, We are collecting answers to frequently asked questions from our discord channel. Contributions welcome!
 
+### How to Use VSCode with TPU VM?
+
+You can follow this [general guide](https://medium.com/@ivanzhd/vscode-sftp-connection-to-compute-engine-on-google-cloud-platform-gcloud-9312797d56eb) on how to use VSCode remote to connect to Google Cloud VMs. Once it's set up, you can develop on the TPU VM using VSCode.
+
+To get your external IP, use this command:
+```
+gcloud compute tpus tpu-vm describe <node_name> --zone=<zone>
+```
+
+It should be listed under 'accessConfig' -> 'externalIp'
+
+### How to Test Your Code Locally?
+
+Since team members are sharing the TPU VM, it might be practical to write and test your code locally on a CPU while your teammates are running the training process on the VM. To run local testing, it is important to set the `xla_force_host_platform_device_count` flag to `4`. Read more on the [documentation](https://jax.readthedocs.io/en/latest/jax-101/06-parallelism.html#aside-hosts-and-devices-in-jax).
