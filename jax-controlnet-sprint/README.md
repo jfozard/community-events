@@ -27,6 +27,7 @@ Don't forget to fill out the [signup form]!
 - [How to Make a Submission](#how-to-make-a-submission)
     - [Pushing model weights and the model card to Hub](#pushing-model-weights-and-the-model-card-to-hub)
 - [Creating our Space](#creating-our-space)
+- [Prizes](#prizes)
 - [FAQ](#faq)
     - [How to Use VSCode with TPU VM?](#how-to-use-vscode-with-tpu-vm)
     - [How to Test Your Code Locally?](#how-to-test-your-code-locally)
@@ -352,6 +353,8 @@ python3 train_controlnet_flax.py \
  --hub_model_id=$HUB_MODEL_ID
  ```
 
+Note that `--from_pt` argument will convert your pytorch checkpoint into flax. However, it will only work with checkpoints in diffusers format. If your `MODEL_DIR` does not contain checkpoints in diffusers format, you cannot use the `--from_pt` argument. You can convert your `ckpt` or `safetensors` checkpoints into diffusers format using [this script](https://github.com/huggingface/diffusers/blob/main/scripts/convert_original_stable_diffusion_to_diffusers.py). 
+
 Since we passed the `--push_to_hub` flag, it will automatically create a model repo under your Hugging Face account based on `$HUB_MODEL_ID`. By the end of training, the final checkpoint will be automatically stored on the hub. You can find an example model repo [here](https://huggingface.co/YiYiXu/fill-circle-controlnet).
 
 Our training script also provides limited support for streaming large datasets from the Hugging Face Hub. In order to enable streaming, one must also set `--max_train_samples`.  Here is an example command (from [this blog article](https://huggingface.co/blog/train-your-controlnet)):
@@ -472,7 +475,9 @@ sudo rm -f /tmp/libtpu_lockfile
 sudo chmod o+w /tmp/tpu_logs/
 ```
 
-## How to Make a Submission
+<div id="how-to-make-a-submission">
+<h2> How to Make a Submission </h2>
+</div>
 
 To make a full submission, you need to have the following on Hugging Face Hub:
 - Model repository with model weights and model card,
@@ -490,7 +495,7 @@ Enabling `push_to_hub` argument in the training arguments will:
 - Push the local repository to Hugging Face Hub.
 
 Your automatically generated model card will look like below 👇 
-![Model Card](https://huggingface.co/datasets/huggingface/documentation-images/blob/main/jax_model_card.png).
+![Model Card](https://huggingface.co/datasets/huggingface/documentation-images/resolve/main/jax_model_card.png).
 
 You can edit the model card to be more informative. Model cards that are more informative than the others will carry more weight during evaluation.
 
@@ -651,6 +656,21 @@ tags:
 - jax-diffusers-event
 ---
 ```
+
+## Prizes
+
+For this sprint we will have many prizes. We will pick the first ten projects from [this leaderboard](https://huggingface.co/spaces/jax-diffusers-event/leaderboard), so you should tag your Space for the leaderboard to make your submission complete, as instructed in above section. The projects are ranked by likes, so we will amplify the visibility of all projects for people to cast their votes by leaving a like on the Space. We will pick the first ten projects from the ranking, and the jury will cast their votes to determine the first three places. These projects will be highlighted by both Google and Hugging Face. Elaborately made interfaces will likely increase the chance of winning prizes. 
+
+Prizes are as follows and are given to each team member 👇 
+    
+**First Place**: A voucher of $150 that you can spend at [Hugging Face Store](https://store.huggingface.co/), Hugging Face Hub PRO subscription for one year, Natural Language Processing with Transformers book
+    
+**Second Place**: A voucher of $125 that you can spend at [Hugging Face Store](https://store.huggingface.co/), Hugging Face Hub PRO subscription for one year
+    
+**Third Place**: A voucher of $100 that you can spend at [Hugging Face Store](https://store.huggingface.co/), Hugging Face Hub PRO subscription for one year
+    
+The first ten projects on the leaderboard (regardless of jury decision) will win a merch set exclusively made for this sprint by Hugging Face, and an separate JAX merch set from Google. 
+
 
 ## FAQ 
 
